@@ -1,0 +1,3 @@
+* FFAP URLs Menu.
+
+FFAP URLs Menu lists visible URLs in the current buffer and allows the user to choose which ones to open.
