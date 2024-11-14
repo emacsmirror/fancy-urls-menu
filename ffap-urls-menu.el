@@ -132,7 +132,7 @@ then the URL will be displayed in the URLs list.")
   "DEL"         #'ffap-urls-menu-backup-unmark
   "~"           #'ffap-urls-menu-not-modified
   "u"           #'ffap-urls-menu-unmark
-  "M-DEL"       #'ffap-urls-menu-unmark-all-buffers
+  "M-DEL"       #'ffap-urls-menu-unmark-all-urls
   "U"           #'ffap-urls-menu-unmark-all
   "m"           #'ffap-urls-menu-mark
   "t"           #'ffap-urls-menu-visit-tags-table
@@ -141,8 +141,8 @@ then the URL will be displayed in the URLs list.")
   "V"           #'ffap-urls-menu-view
   "O"           #'ffap-urls-menu-view-other-window
   "T"           #'ffap-urls-menu-toggle-files-only
-  "M-s a C-s"   #'ffap-urls-menu-isearch-buffers
-  "M-s a C-M-s" #'ffap-urls-menu-isearch-buffers-regexp
+  "M-s a C-s"   #'ffap-urls-menu-isearch-urls
+  "M-s a C-M-s" #'ffap-urls-menu-isearch-urls-regexp
   "M-s a C-o"   #'ffap-urls-menu-multi-occur
   "<mouse-2>"     #'ffap-urls-menu-mouse-select
   "<follow-link>" 'mouse-face)
@@ -157,48 +157,54 @@ then the URL will be displayed in the URLs list.")
      :help "Mark URL on this line for being displayed by v command"]
     ["Unmark all" ffap-urls-menu-unmark-all
      :help "Cancel all requested operations on URLs"]
-    ["Remove marks..." ffap-urls-menu-unmark-all-buffers
+    ["Remove marks..." ffap-urls-menu-unmark-all-urls
      :help "Cancel a requested operation on all URLs"]
     ["Unmark" ffap-urls-menu-unmark
      :help "Cancel all requested operations on URL on this line and move down"]
     ["Mark for Save" ffap-urls-menu-save
      :help "Mark URL on this line to be saved by x command"]
     ["Mark for Delete" ffap-urls-menu-delete
-     ;; ???
-     :help "Mark buffer on this line to be deleted by x command"]
-    ["Mark for Delete and Move Backwards" Buffer-menu-delete-backwards
-     :help "Mark buffer on this line to be deleted by x command and move up one line"]
+     ;; TODO: How do I use that?  I probably don't?  Delete?
+     :help "Mark URL on this line to be deleted by x command"]
+    ["Mark for Delete and Move Backwards" ffap-urls-menu-delete-backwards
+     :help "Mark URL on this line to be deleted by x command and move up one line"]
     "---"
-    ["Execute" Buffer-menu-execute
-     :help "Save and/or delete buffers marked with s or k commands"]
-    ["Set Unmodified" Buffer-menu-not-modified
-     :help "Mark buffer on this line as unmodified (no changes to save)"]
-    ["Bury" Buffer-menu-bury
-     :help "Bury the buffer listed on this line"]
+    ["Execute" ffap-urls-menu-execute
+     ;; TODO: Decide on which commands to implement and which letters to attach to those commands.  Ask around!
+     :help "Open URLs marked with o command"]
+    ["Set Unmodified" ffap-urls-menu-not-modified
+     ;; TODO: Doesn't make sense for URLs.
+     :help "Mark URL on this line as unmodified"]
+    ["Bury" ffap-urls-menu-bury
+     :help "Bury the URL listed on this line"]
     "---"
-    ["Multi Occur Marked Buffers..." Buffer-menu-multi-occur
-     :help "Show lines matching a regexp in marked buffers using Occur"]
-    ["Isearch Marked Buffers..." Buffer-menu-isearch-buffers
+    ["Multi Occur Marked URLs..." ffap-urls-menu-multi-occur
+     :help "Show lines matching a regexp in marked URLs using Occur"]
+    ;; TODO: BLAH
+    ["Isearch Marked Buffers..." ffap-urls-menu-isearch-buffers
      :help "Search for a string through all marked buffers using Isearch"]
-    ["Regexp Isearch Marked Buffers..." Buffer-menu-isearch-buffers-regexp
+    ;; TODO: BLAH
+    ["Regexp Isearch Marked Buffers..." ffap-urls-menu-isearch-buffers-regexp
      :help "Search for a regexp through all marked buffers using Isearch"]
     "---"
+    ;; TODO: BLAH
     ;; FIXME: The "Select" entries could use better names...
-    ["Select in Current Window" Buffer-menu-this-window
+    ;; TODO: BLAH
+    ["Select in Current Window" ffap-urls-menu-this-window
      :help "Select this line's buffer in this window"]
-    ["Select in Other Window" Buffer-menu-other-window
+    ["Select in Other Window" ffap-urls-menu-other-window
      :help "Select this line's buffer in other window, leaving buffer menu visible"]
-    ["Select Current" Buffer-menu-1-window
+    ["Select Current" ffap-urls-menu-1-window
      :help "Select this line's buffer, alone, in full frame"]
-    ["Select Two" Buffer-menu-2-window
+    ["Select Two" ffap-urls-menu-2-window
      :help "Select this line's buffer, with previous buffer in second window"]
-    ["Select Marked" Buffer-menu-select
+    ["Select Marked" ffap-urls-menu-select
      :help "Select this line's buffer; also display buffers marked with `>'"]
     "---"
-    ["Show Only File Buffers" Buffer-menu-toggle-files-only
+    ["Show Only File Buffers" ffap-urls-menu-toggle-files-only
      :help "Toggle whether the current buffer-menu displays only file buffers"
      :style toggle
-     :selected Buffer-menu-files-only]
+     :selected ffap-urls-menu-files-only]
     "---"
     ["Refresh" revert-buffer
      :help "Refresh the *Buffer List* buffer contents"]
@@ -249,31 +255,31 @@ In Buffer Menu mode, the following commands are defined:
               (lambda (&optional _noconfirm) 'fast))
   (add-hook 'tabulated-list-revert-hook 'list-buffers--refresh nil t))
 
-(define-derived-mode ffap-menu-mode tabulated-list-mode "ffap menu"
+(define-derived-mode ffap-urls-menu-mode tabulated-list-mode "FFAP URLs Menu"
   ;; :interactive nil
   ;; (setq-local buffer-stale-function
   ;;             (lambda (&optional _noconfirm) 'fast))
   ;; (add-hook 'tabulated-list-revert-hook 'list-buffers--refresh nil t)
   )
 
-(defun buffer-menu--display-help ()
+(defun ffap-urls-menu--display-help ()
   (message "%s"
            (substitute-command-keys
             (concat
              "Commands: "
-             "\\<Buffer-menu-mode-map>"
-             "\\[Buffer-menu-delete], "
-             "\\[Buffer-menu-save], "
-             "\\[Buffer-menu-execute], "
-             "\\[Buffer-menu-unmark]; "
-             "\\[Buffer-menu-this-window], "
-             "\\[Buffer-menu-other-window], "
-             "\\[Buffer-menu-1-window], "
-             "\\[Buffer-menu-2-window], "
-             "\\[Buffer-menu-mark], "
-             "\\[Buffer-menu-select]; "
-             "\\[Buffer-menu-not-modified], "
-             "\\[Buffer-menu-toggle-read-only]; "
+             "\\<ffap-urls-menu-mode-map>"
+             "\\[ffap-urls-menu-delete], "
+             "\\[ffap-urls-menu-save], "
+             "\\[ffap-urls-menu-execute], "
+             "\\[ffap-urls-menu-unmark]; "
+             "\\[ffap-urls-menu-this-window], "
+             "\\[ffap-urls-menu-other-window], "
+             "\\[ffap-urls-menu-1-window], "
+             "\\[ffap-urls-menu-2-window], "
+             "\\[ffap-urls-menu-mark], "
+             "\\[ffap-urls-menu-select]; "
+             "\\[ffap-urls-menu-not-modified], "
+             "\\[ffap-urls-menu-toggle-read-only]; "
              "\\[quit-window] to quit; \\[describe-mode] for help"))))
 
 (defun buffer-menu (&optional arg)
