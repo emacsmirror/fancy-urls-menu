@@ -44,14 +44,14 @@
   "The mark character for marked URLs.")
 
 (defcustom ffap-urls-menu-use-header-line t
-  ;; ???
+  ;; TODO: What the hell is that???
   "If non-nil, use the header line to display URLs Menu column titles."
   :type 'boolean
   :group 'ffap-urls-menu)
 
 (defface ffap-urls-menu-buffer
   '((t (:weight bold)))
-  "Face for buffer names in the Buffer Menu."
+  "Face for buffer names in the FFAP URLs Menu."
   :group 'Buffer-menu)
 
 (defun ffap-urls-menu--dynamic-name-width (buffers)
@@ -75,95 +75,96 @@ number."
   :group 'ffap-urls-menu
   :version "28.1")
 
-(defcustom Buffer-menu-size-width 7
-  "Width of buffer size column in the Buffer Menu."
+(defcustom ffap-urls-menu-size-width 7
+  "Width of buffer size column in the FFAP URLs Menu."
   :type 'natnum
-  :group 'Buffer-menu
+  :group 'ffap-urls-menu
   :version "24.3")
 
-(defcustom Buffer-menu-mode-width 16
-  "Width of mode name column in the Buffer Menu."
+(defcustom ffap-urls-menu-mode-width 16
+  "Width of mode name column in the FFAP URLs Menu."
   :type 'natnum
-  :group 'Buffer-menu)
+  :group 'ffap-urls-menu)
 
-(defcustom Buffer-menu-use-frame-buffer-list t
-  "If non-nil, the Buffer Menu uses the selected frame's buffer list.
-Buffers that were never selected in that frame are listed at the end.
-If the value is nil, the Buffer Menu uses the global buffer list.
-This variable matters if the Buffer Menu is sorted by visited order,
+(defcustom ffap-urls-menu-use-frame-buffer-list t
+  "If non-nil, the FFAP URLs Menu uses the selected frame's URLs list.
+URLs that were never selected in that frame are listed at the end.
+If the value is nil, the FFAP URLs Menu uses the global buffer list.
+This variable matters if the FFAP URLs Menu is sorted by visited order,
 as it is by default."
   :type 'boolean
-  :group 'Buffer-menu
+  :group 'ffap-urls-menu
   :version "22.1")
 
-(defvar-local Buffer-menu-files-only nil
-  "Non-nil if the current Buffer Menu lists only file buffers.
-This is set by the prefix argument to `buffer-menu' and related
+(defvar-local ffap-urls-menu-files-only nil
+  "Non-nil if the current FFAP URLs Menu lists only file buffers.
+This is set by the prefix argument to `ffap-urls-menu' and related
 commands.")
 
-(defvar-local Buffer-menu-filter-predicate nil
-  "Function to filter out buffers in the buffer list.
-Buffers that don't satisfy the predicate will be skipped.
+(defvar-local ffap-urls-menu-filter-predicate nil
+  "Function to filter out URLs in the URLs list.
+URLs that don't satisfy the predicate will be skipped.
 The value should be a function of one argument; it will be
-called with the buffer.  If this function returns non-nil,
-then the buffer will be displayed in the buffer list.")
+called with the URL.  If this function returns non-nil,
+then the URL will be displayed in the URLs list.")
 
-(defvar-local Buffer-menu-buffer-list nil
-  "The current list of buffers or function to return buffers.")
+(defvar-local ffap-urls-menu-urls-list nil
+  "The current list of URLs or function to return URLs.")
 
-(defvar-keymap Buffer-menu-mode-map
-  :doc "Local keymap for `Buffer-menu-mode' buffers."
+(defvar-keymap ffap-urls-menu-mode-map
+  :doc "Local keymap for `ffap-urls-menu-mode' buffers."
   :parent tabulated-list-mode-map
-  "v"           #'Buffer-menu-select
-  "2"           #'Buffer-menu-2-window
-  "1"           #'Buffer-menu-1-window
-  "f"           #'Buffer-menu-this-window
-  "e"           #'Buffer-menu-this-window
-  "C-m"         #'Buffer-menu-this-window
-  "o"           #'Buffer-menu-other-window
-  "C-o"         #'Buffer-menu-switch-other-window
-  "s"           #'Buffer-menu-save
-  "d"           #'Buffer-menu-delete
-  "k"           #'Buffer-menu-delete
-  "C-k"         #'Buffer-menu-delete
-  "C-d"         #'Buffer-menu-delete-backwards
-  "x"           #'Buffer-menu-execute
+  "v"           #'ffap-urls-menu-select
+  "2"           #'ffap-urls-menu-2-window
+  "1"           #'ffap-urls-menu-1-window
+  "f"           #'ffap-urls-menu-this-window
+  "e"           #'ffap-urls-menu-this-window
+  "C-m"         #'ffap-urls-menu-this-window
+  "o"           #'ffap-urls-menu-other-window
+  "C-o"         #'ffap-urls-menu-switch-other-window
+  "s"           #'ffap-urls-menu-save
+  "d"           #'ffap-urls-menu-delete
+  "k"           #'ffap-urls-menu-delete
+  "C-k"         #'ffap-urls-menu-delete
+  "C-d"         #'ffap-urls-menu-delete-backwards
+  "x"           #'ffap-urls-menu-execute
   "SPC"         #'next-line
-  "DEL"         #'Buffer-menu-backup-unmark
-  "~"           #'Buffer-menu-not-modified
-  "u"           #'Buffer-menu-unmark
-  "M-DEL"       #'Buffer-menu-unmark-all-buffers
-  "U"           #'Buffer-menu-unmark-all
-  "m"           #'Buffer-menu-mark
-  "t"           #'Buffer-menu-visit-tags-table
-  "%"           #'Buffer-menu-toggle-read-only
-  "b"           #'Buffer-menu-bury
-  "V"           #'Buffer-menu-view
-  "O"           #'Buffer-menu-view-other-window
-  "T"           #'Buffer-menu-toggle-files-only
-  "M-s a C-s"   #'Buffer-menu-isearch-buffers
-  "M-s a C-M-s" #'Buffer-menu-isearch-buffers-regexp
-  "M-s a C-o"   #'Buffer-menu-multi-occur
-  "<mouse-2>"     #'Buffer-menu-mouse-select
+  "DEL"         #'ffap-urls-menu-backup-unmark
+  "~"           #'ffap-urls-menu-not-modified
+  "u"           #'ffap-urls-menu-unmark
+  "M-DEL"       #'ffap-urls-menu-unmark-all-buffers
+  "U"           #'ffap-urls-menu-unmark-all
+  "m"           #'ffap-urls-menu-mark
+  "t"           #'ffap-urls-menu-visit-tags-table
+  "%"           #'ffap-urls-menu-toggle-read-only
+  "b"           #'ffap-urls-menu-bury
+  "V"           #'ffap-urls-menu-view
+  "O"           #'ffap-urls-menu-view-other-window
+  "T"           #'ffap-urls-menu-toggle-files-only
+  "M-s a C-s"   #'ffap-urls-menu-isearch-buffers
+  "M-s a C-M-s" #'ffap-urls-menu-isearch-buffers-regexp
+  "M-s a C-o"   #'ffap-urls-menu-multi-occur
+  "<mouse-2>"     #'ffap-urls-menu-mouse-select
   "<follow-link>" 'mouse-face)
 
-(put 'Buffer-menu-delete :advertised-binding "d")
-(put 'Buffer-menu-this-window :advertised-binding "f")
+(put 'ffap-urls-menu-delete :advertised-binding "d")
+(put 'ffap-urls-menu-this-window :advertised-binding "f")
 
-(easy-menu-define Buffer-menu-mode-menu Buffer-menu-mode-map
-  "Menu for `Buffer-menu-mode' buffers."
-  '("Buffer-Menu"
-    ["Mark" Buffer-menu-mark
-     :help "Mark buffer on this line for being displayed by v command"]
-    ["Unmark all" Buffer-menu-unmark-all
-     :help "Cancel all requested operations on buffers"]
-    ["Remove marks..." Buffer-menu-unmark-all-buffers
-     :help "Cancel a requested operation on all buffers"]
-    ["Unmark" Buffer-menu-unmark
-     :help "Cancel all requested operations on buffer on this line and move down"]
-    ["Mark for Save" Buffer-menu-save
-     :help "Mark buffer on this line to be saved by x command"]
-    ["Mark for Delete" Buffer-menu-delete
+(easy-menu-define ffap-urls-menu-mode-menu ffap-urls-menu-mode-map
+  "Menu for `ffap-urls-menu-mode' buffers."
+  '("FFAP-URLs-Menu"
+    ["Mark" ffap-urls-menu-mark
+     :help "Mark URL on this line for being displayed by v command"]
+    ["Unmark all" ffap-urls-menu-unmark-all
+     :help "Cancel all requested operations on URLs"]
+    ["Remove marks..." ffap-urls-menu-unmark-all-buffers
+     :help "Cancel a requested operation on all URLs"]
+    ["Unmark" ffap-urls-menu-unmark
+     :help "Cancel all requested operations on URL on this line and move down"]
+    ["Mark for Save" ffap-urls-menu-save
+     :help "Mark URL on this line to be saved by x command"]
+    ["Mark for Delete" ffap-urls-menu-delete
+     ;; ???
      :help "Mark buffer on this line to be deleted by x command"]
     ["Mark for Delete and Move Backwards" Buffer-menu-delete-backwards
      :help "Mark buffer on this line to be deleted by x command and move up one line"]
