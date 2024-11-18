@@ -1,3 +1,7 @@
 * FFAP URLs Menu.
 
 FFAP URLs Menu lists visible URLs in the current buffer and allows the user to choose which ones to open.
+
+** Support:
+
+[[https://buymeacoffee.com/kakafarm][Support me 💰 on "buymeacoffee"]]
