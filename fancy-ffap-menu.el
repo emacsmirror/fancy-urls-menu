@@ -131,7 +131,7 @@
 (defun fancy-ffap-menu-list-urls ()
   (interactive)
   (let ((old-buffer (current-buffer))
-        (buffer (get-buffer-create "moo"))
+        (buffer (get-buffer-create "*fancy ffap URLs list*"))
         (urls (mapcar 'car (ffap-menu-rescan))))
     (with-current-buffer buffer
       (fancy-ffap-menu-mode)
