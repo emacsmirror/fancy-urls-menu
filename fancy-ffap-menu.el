@@ -1,12 +1,10 @@
 ;;; fancy-ffap-menu.el --- Interface for viewing and choosing URLs to open. -*- lexical-binding: t -*-
 
-;; Copyright (C) 1985-2024 Free Software Foundation, Inc.
+;; Copyright (C) 2024  Yuval Langer
 
-;; Maintainer: emacs-devel@gnu.org
+;; Maintainer: yuval.langer@gmail.com
 ;; Keywords: convenience
-;; Package: emacs
-
-;; This file is part of GNU Emacs.
+;; Package: 
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
