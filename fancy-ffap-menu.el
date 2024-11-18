@@ -32,6 +32,19 @@
 
 (require 'tabulated-list)
 
+(easy-menu-define fancy-ffap-menu-mode-menu fancy-ffap-menu-mode-map
+  "Menu for `fancy-ffap-menu-mode' buffers."
+  '("fancy-ffap-menu"
+    ["Mark Open" fancy-ffap-menu-mark-open
+     :help "Mark URL on this line for being displayed by `browse-url' command"]
+    ["Unmark all" fancy-ffap-menu-unmark-all
+     :help "Cancel all requested operations on URLs"]
+    ["Unmark" fancy-ffap-menu-unmark
+     :help "Cancel all requested operations on buffer on this line and move down"]
+    "---"
+    ["Execute" Buffer-menu-execute
+     :help "Save and/or delete buffers marked with s or k commands"]))
+
 (define-derived-mode fancy-ffap-menu-mode tabulated-list-mode
   "fancy ffap menu mode")
 
