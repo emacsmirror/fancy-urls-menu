@@ -1,6 +1,8 @@
-* FFAP URLs Menu.
+* Fancy FFAP URLs Menu.
 
-FFAP URLs Menu lists visible URLs in the current buffer and allows the user to choose which ones to open.
+The Fancy FFAP (Find File At Point!  Look it up, it's legit and not at all a cheeky joke!) URLs Menu is used to view and choose the URLs visible in the current buffer for opening in a browser (EWW, links2, or something horrid like Firefox).
+
+Currently only src_elisp{fancy-ffap-menu-list-urls} works.
 
 ** Support:
 

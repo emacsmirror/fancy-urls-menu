@@ -142,7 +142,15 @@
     (browse-url url)))
 
 (defun fancy-ffap-menu-list-urls ()
+  "Display a list of current buffer's URLs.
+The list is displayed in a buffer named \"*fancy ffap URLs list*\""
   (interactive)
+  (display-buffer (fancy-ffap-menu-list-urls-noselect)))
+
+(defun fancy-ffap-menu-list-urls-noselect ()
+  "Create and return a Buffer Menu buffer.
+This is called by `fancy-ffap-menu-list-urls' and others as a subroutine."
+  (interactive nil fancy-ffap-menu-mode)
   (let ((old-buffer (current-buffer))
         (buffer (get-buffer-create "*fancy ffap URLs list*"))
         (urls (mapcar 'car (ffap-menu-rescan))))
@@ -155,6 +163,7 @@
                    ))
       (setq-local tabulated-list-use-header-line t)
       (setq-local tabulated-list-entries (mapcar (lambda (url) (list nil (vector " " url))) urls))
-      (tabulated-list-print))))
+      (tabulated-list-print))
+    buffer))
 
 ;;; fancy-ffap-menu.el ends here
