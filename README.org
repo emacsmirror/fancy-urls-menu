@@ -4,6 +4,12 @@ The Fancy FFAP (Find File At Point!  Look it up, it's legit and not at all a che
 
 Currently only src_elisp{fancy-ffap-menu-list-urls} works.
 
-** Support:
+** Contribute: Questions, Bug reports, Feature Requests, And Patches.
 
-[[https://buymeacoffee.com/kakafarm][Support me 💰 on "buymeacoffee"]]
+If you have any questions to ask, bugs to report, or features to suggest, use [[https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/issues/new][the Codeberg issue tracker]].
+
+If you have patches to submit, please send them on [[https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/pulls][the Codeberg pull requests thingamabob].
+
+** Support.
+
+[[https://buymeacoffee.com/kakafarm][Support me 💰 on "buymeacoffee"]].
