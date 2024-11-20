@@ -190,7 +190,7 @@ If UNMARK is non-nil, unmark them."
 	(filter-predicate (and (functionp fancy-ffap-menu-filter-predicate)
 			       Buffer-menu-filter-predicate))
 	entries
-        name-width)
+        url-width)
     (dolist (url (ffap-menu-rescan))
       (when (or url-list
 		(and (or (not filter-predicate)
@@ -212,24 +212,26 @@ If UNMARK is non-nil, unmark them."
     (setq tabulated-list-entries (nreverse entries)))
   (tabulated-list-init-header))
 
-(defun fancy-ffap-menu-list-urls-noselect ()
+(defun fancy-ffap-menu--ffap-menu-rescan-urls ()
+  (mapcar 'car (ffap-menu-rescan)))
+
+(defun fancy-ffap-menu-list-urls-noselect (&optional url-list filter-predicate)
   "Create and return a Buffer Menu buffer.
-This is called by `fancy-ffap-menu-list-urls' and others as a subroutine."
-  (interactive nil fancy-ffap-menu-mode)
-  (let ((old-buffer (current-buffer))
-        (buffer (get-buffer-create "*fancy ffap URLs list*"))
-        (urls (mapcar 'car (ffap-menu-rescan))))
+This is called by `fancy-ffap-menu-list-urls' and others as a subroutine.
+
+If URL-LIST is non-nil, it should be either a list of URLs or a
+function that returns a list of URLs; it means list those URLs
+and no others.  See more at `fancy-ffap-menu-url-list'.
+
+If FILTER-PREDICATE is non-nil, it should be a function that
+filters out URLs from the list of URLs.  See more at
+`fancy-ffap-menu-filter-predicate'."
+  (let ((buffer (get-buffer-create "*fancy ffap URLs list*")))
     (with-current-buffer buffer
       (fancy-ffap-menu-mode)
-      (setq-local tabulated-list-format
-                  (vector
-                   '("M" 1 t)
-                   '("URL" 80 t) ;; :pad-right 0
-                   ))
-      (setq-local tabulated-list-use-header-line t)
-      (setq-local tabulated-list-entries (mapcar (lambda (url) (list nil (vector " " url))) urls))
-      (fancy-ffap-menu--refresh urls)
-      (setq-local tabulated-list-use-header-line fancy-ffap-menu-use-header-line)
+      (setq fancy-ffap-menu-url-list url-list)
+      (setq fancy-ffap-menu-filter-predicate filter-predicate)
+      (fancy-ffap-menu--refresh url-list)
       (tabulated-list-print))
     buffer))
 
