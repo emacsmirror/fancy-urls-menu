@@ -130,7 +130,7 @@ If ARG is positive, unmark current entry and (ARG - 1) next entries."
 (defcustom fancy-ffap-menu-use-header-line t
   "If non-nil, use the header line to display URLs Menu column titles."
   :type 'boolean
-  :group 'fancy-ffap-menu-menu)
+  :group 'fancy-ffap-menu)
 
 (defun fancy-ffap-menu-beginning ()
   "Move point to the first entry line."
