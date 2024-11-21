@@ -151,7 +151,7 @@ The list is displayed in a buffer named \"*fancy ffap URLs list*\""
   (display-buffer (fancy-ffap-menu-list-urls-noselect)))
 
 (defun fancy-ffap-menu-url (&optional error-if-non-existent-p)
-  "Return the URL described by the current Buffer Menu line.
+  "Return the URL described by the current URL Menu line.
 If there is no URL here, return nil if ERROR-IF-NON-EXISTENT-P
 is nil or omitted, and signal an error otherwise."
   (let ((url (tabulated-list-get-id)))
