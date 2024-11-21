@@ -73,7 +73,7 @@ then the URL will be displayed in the URL list.")
   "Mark all entries for opening."
   (interactive nil fancy-ffap-menu-mode)
   (save-excursion
-    (goto-char (point-min))
+    (fancy-ffap-menu-beginning)
     (tabulated-list-set-col 0 "o" t)
     (while (not (eobp))
       (tabulated-list-set-col 0 "o" t)
@@ -83,7 +83,7 @@ then the URL will be displayed in the URL list.")
   "Mark all entries for opening."
   (interactive nil fancy-ffap-menu-mode)
   (save-excursion
-    (goto-char (point-min))
+    (fancy-ffap-menu-beginning)
     (tabulated-list-set-col 0 " " t)
     (while (not (eobp))
       (tabulated-list-set-col 0 " " t)
@@ -171,16 +171,20 @@ If UNMARK is non-nil, unmark them."
     (nreverse urls)))
 
 (defun fancy-ffap-menu--entry-to-url (entry)
+  "Return the URL of ENTRY."
   (pcase entry
     (`(,_entry-id [,_entry-mark ,entry-url]) entry-url)))
 
 (defun fancy-ffap-menu--refresh (&optional url-list)
-  (let ((marked-open-urls (fancy-ffap-menu-marked-urls))
+  "Refresh URLs table.
+
+When URL-LIST is provided, it must be either a list of URLs or a
+function that returns a list of URLs."
+  (let ((marked-urls (fancy-ffap-menu-marked-urls))
         (filter-predicate (and (functionp fancy-ffap-menu-filter-predicate)
                                fancy-ffap-menu-filter-predicate))
         entries
         url-width)
-    (message "poop")
     (dolist (url (cond
                   ((functionp url-list)
                    (funcall url-list))
@@ -192,7 +196,7 @@ If UNMARK is non-nil, unmark them."
                 (funcall filter-predicate url))
         (push (list url
                     (vector (cond
-                             ((member url marked-open-urls) "o")
+                             ((member url marked-urls) "o")
                              (t " "))
                             url))
               entries)))
@@ -211,6 +215,9 @@ If UNMARK is non-nil, unmark them."
   (tabulated-list-init-header))
 
 (defun fancy-ffap-menu--ffap-menu-rescan-urls ()
+  "Return all URLs in current buffer.
+
+Returned list includes duplicates."
   (mapcar 'car (ffap-menu-rescan)))
 
 (defun fancy-ffap-menu-list-urls-noselect (&optional url-list filter-predicate)
