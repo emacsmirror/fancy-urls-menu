@@ -127,6 +127,12 @@ If ARG is positive, unmark current entry and (ARG - 1) next entries."
     (forward-line -1)
     (setq arg (1+ arg))))
 
+(defcustom fancy-ffap-menu-browser 'browse-url
+  "Function used to open a URL."
+  :type 'function
+  :group 'fancy-ffap-menu
+  )
+
 (defcustom fancy-ffap-menu-use-header-line t
   "If non-nil, use the header line to display URLs Menu column titles."
   :type 'boolean
@@ -139,10 +145,10 @@ If ARG is positive, unmark current entry and (ARG - 1) next entries."
     (forward-line)))
 
 (defun fancy-ffap-menu-open-marked-entries ()
-  "Open entries marked for opening with `browse-url'."
+  "Open entries marked for opening with `fancy-ffap-menu-browser'."
   (interactive nil fancy-ffap-menu-mode)
   (dolist (url (fancy-ffap-menu-marked-urls))
-    (browse-url url)))
+    (apply fancy-ffap-menu-browser (list url))))
 
 (defun fancy-ffap-menu-list-urls ()
   "Display a list of current buffer's URLs.
