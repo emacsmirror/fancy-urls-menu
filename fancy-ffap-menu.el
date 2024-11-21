@@ -75,7 +75,6 @@ then the URL will be displayed in the URL list.")
   (interactive nil fancy-ffap-menu-mode)
   (save-excursion
     (fancy-ffap-menu-beginning)
-    (tabulated-list-set-col 0 "o" t)
     (while (not (eobp))
       (tabulated-list-set-col 0 "o" t)
       (forward-line 1))))
@@ -85,7 +84,6 @@ then the URL will be displayed in the URL list.")
   (interactive nil fancy-ffap-menu-mode)
   (save-excursion
     (fancy-ffap-menu-beginning)
-    (tabulated-list-set-col 0 " " t)
     (while (not (eobp))
       (tabulated-list-set-col 0 " " t)
       (forward-line 1))))
@@ -249,7 +247,6 @@ filters out URLs from the list of URLs.  See more at
       (with-current-buffer fancy-buffer
         (fancy-ffap-menu-beginning)
         (fancy-ffap-menu-mark-all)
-        (message "%s" (fancy-ffap-menu-marked-urls))
         (should (equal '()
                        (fancy-ffap-menu-marked-urls)))))))
 
@@ -259,7 +256,6 @@ filters out URLs from the list of URLs.  See more at
       (with-current-buffer fancy-buffer
         (fancy-ffap-menu-beginning)
         (fancy-ffap-menu-mark-all)
-        (message "%s" (fancy-ffap-menu-marked-urls))
         (should (equal '("https://gnu.org/")
                        (fancy-ffap-menu-marked-urls)))))))
 
@@ -269,7 +265,6 @@ filters out URLs from the list of URLs.  See more at
       (with-current-buffer fancy-buffer
         (fancy-ffap-menu-beginning)
         (fancy-ffap-menu-mark-all)
-        (message "%s" (fancy-ffap-menu-marked-urls))
         (should (equal '()
                        (fancy-ffap-menu-marked-urls)))))))
 
@@ -286,7 +281,6 @@ filters out URLs from the list of URLs.  See more at
       (with-current-buffer fancy-buffer
         (fancy-ffap-menu-beginning)
         (fancy-ffap-menu-mark-all)
-        (message "%s" (fancy-ffap-menu-marked-urls))
         (should (equal '("https://gnu.org/" "https://farside.link/")
                        (fancy-ffap-menu-marked-urls)))))))
 
