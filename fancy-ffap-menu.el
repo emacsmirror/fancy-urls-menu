@@ -1,10 +1,12 @@
-;;; fancy-ffap-menu.el --- Interface for viewing and choosing URLs to open. -*- lexical-binding: t -*-
+;;; fancy-ffap-menu.el --- Interface for viewing and choosing URLs to open -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2024  Yuval Langer
 
 ;; Maintainer: yuval.langer@gmail.com
 ;; Keywords: convenience
-;; Package:
+;; Package-Requires: ((emacs "29.1"))
+;; Version: 0.1.0
+;; Homepage: https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -50,8 +52,7 @@ then the URL will be displayed in the URL list.")
   "a" #'fancy-ffap-menu-mark-all
   "x" #'fancy-ffap-menu-open-marked-entries
   "u" #'fancy-ffap-menu-unmark
-  "U" #'fancy-ffap-menu-unmark-all
-  )
+  "U" #'fancy-ffap-menu-unmark-all)
 
 (easy-menu-define fancy-ffap-menu-mode-menu fancy-ffap-menu-mode-map
   "Menu for `fancy-ffap-menu-mode' buffers."
@@ -258,5 +259,7 @@ filters out URLs from the list of URLs.  See more at
         (message "%s" (fancy-ffap-menu-marked-urls))
         (should (equal '("https://gnu.org/" "https://farside.link/")
                        (fancy-ffap-menu-marked-urls)))))))
+
+(provide 'fancy-ffap-menu)
 
 ;;; fancy-ffap-menu.el ends here
