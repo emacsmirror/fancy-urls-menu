@@ -57,15 +57,18 @@ then the URL will be displayed in the URL list.")
 (easy-menu-define fancy-ffap-menu-mode-menu fancy-ffap-menu-mode-map
   "Menu for `fancy-ffap-menu-mode' buffers."
   '("fancy-ffap-menu"
-    ["Mark To Open" fancy-ffap-menu-mark
-     :help "Mark URL on this line for being displayed by `browse-url' command"]
-    ["Unmark all" fancy-ffap-menu-unmark-all
-     :help "Cancel all requested operations on URLs"]
+    ["Mark URL" fancy-ffap-menu-mark
+     :help "Mark URL for browsing with `fancy-ffap-menu-browser'"]
+    ["Mark all URLs" fancy-ffap-menu-mark-all
+     :help "Mark all URLs for browsing with `fancy-ffap-menu-browser'."]
+    "---"
     ["Unmark" fancy-ffap-menu-unmark
-     :help "Cancel all requested operations on buffer on this line and move down"]
+     :help "Unmark a URL for browsing."]
+    ["Unmark all URLs" fancy-ffap-menu-unmark-all
+     :help "Unmark all URLs for browsing."]
     "---"
     ["Execute" Buffer-menu-execute
-     :help "Save and/or delete buffers marked with s or k commands"]))
+     :help "Open all marked URLs with `fancy-ffap-menu-browser'."]))
 
 (define-derived-mode fancy-ffap-menu-mode tabulated-list-mode
   "fancy ffap menu mode")
