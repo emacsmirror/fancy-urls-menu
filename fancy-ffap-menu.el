@@ -69,12 +69,6 @@ then the URL will be displayed in the URL list.")
 (define-derived-mode fancy-ffap-menu-mode tabulated-list-mode
   "fancy ffap menu mode")
 
-;; https://gnu.org/
-;; https://farside.link/
-;; https://farside.link/
-;; https://gnu.org/
-;; https://farside.link/
-
 (defun fancy-ffap-menu-mark-all ()
   "Mark all entries for opening."
   (interactive nil fancy-ffap-menu-mode)
@@ -171,8 +165,8 @@ If UNMARK is non-nil, unmark them."
     (fancy-ffap-menu-beginning)
     (while (re-search-forward "^o" nil t)
       (let ((url (fancy-ffap-menu-url)))
-        (if (and url unmark)
-            (tabulated-list-set-col 0 " " t))
+        (when (and url unmark)
+          (tabulated-list-set-col 0 " " t))
         (push url urls)))
     (nreverse urls)))
 
@@ -240,5 +234,22 @@ filters out URLs from the list of URLs.  See more at
       (fancy-ffap-menu--refresh url-list)
       (tabulated-list-print))
     buffer))
+
+(ert-deftest fancy-ffap-menu-list-urls-noselect-test ()
+  (with-temp-buffer
+  (insert "
+;; https://gnu.org/
+;; https://farside.link/
+;; https://farside.link/
+;; https://gnu.org/
+;; https://farside.link/
+")
+    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect)))
+      (with-current-buffer fancy-buffer
+        (fancy-ffap-menu-beginning)
+        (fancy-ffap-menu-mark-all)
+        (message "%s" (fancy-ffap-menu-marked-urls))
+        (should (equal '("https://gnu.org/" "https://farside.link/")
+                       (fancy-ffap-menu-marked-urls)))))))
 
 ;;; fancy-ffap-menu.el ends here
