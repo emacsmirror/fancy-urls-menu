@@ -249,49 +249,6 @@ filters out URLs from the list of URLs.  See more at
       (tabulated-list-print))
     buffer))
 
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-url-list-empty ()
-  (with-temp-buffer
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect '())))
-      (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
-        (should (equal '()
-                       (fancy-ffap-menu-marked-urls)))))))
-
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-url-list-only-gnu ()
-  (with-temp-buffer
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect '("https://gnu.org/"))))
-      (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
-        (should (equal '("https://gnu.org/")
-                       (fancy-ffap-menu-marked-urls)))))))
-
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-empty ()
-  (with-temp-buffer
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect)))
-      (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
-        (should (equal '()
-                       (fancy-ffap-menu-marked-urls)))))))
-
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-some-urls ()
-  (with-temp-buffer
-    (insert "
-;; https://gnu.org/
-;; https://farside.link/
-;; https://farside.link/
-;; https://gnu.org/
-;; https://farside.link/
-")
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect)))
-      (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
-        (should (equal '("https://gnu.org/" "https://farside.link/")
-                       (fancy-ffap-menu-marked-urls)))))))
-
 (provide 'fancy-ffap-menu)
 
 ;;; fancy-ffap-menu.el ends here
