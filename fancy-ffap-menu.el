@@ -148,6 +148,7 @@ If ARG is positive, unmark current entry and (ARG - 1) next entries."
   (dolist (url (fancy-ffap-menu-marked-urls))
     (apply fancy-ffap-menu-browser (list url))))
 
+;;;###autoload
 (defun fancy-ffap-menu-list-urls ()
   "Display a list of current buffer's URLs.
 The list is displayed in a buffer named \"*fancy ffap URLs list*\""
