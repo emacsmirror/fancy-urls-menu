@@ -23,12 +23,11 @@
 
 ;;; Commentary:
 
-;; The FFAP (Find File At Point!  Look it up, it's legit and not at
-;; all a cheeky joke!) URLs Menu is used to view and choose the
-;; visible URLs one would like to open in a browser (EWW, links2, or
-;; something deficient like Firefox).  The entry points are (TODO:
-;; shouldn't I leave it up to the user?) `C-x C-b'
-;; (`fancy-ffap-menu-list-urls').
+;; The Fancy FFAP (Find File At Point!  Look it up, it's legit and not
+;; at all a cheeky joke!) Menu is used to view and choose the visible
+;; URLs one would like to open in a browser (EWW, links2, or something
+;; deficient like Firefox).  Run the `fancy-ffap-menu-list-urls'
+;; command to get the URLs of the current buffer.
 
 ;;; Code:
 
@@ -130,8 +129,7 @@ If ARG is positive, unmark current entry and (ARG - 1) next entries."
 (defcustom fancy-ffap-menu-browser 'browse-url
   "Function used to open a URL."
   :type 'function
-  :group 'fancy-ffap-menu
-  )
+  :group 'fancy-ffap-menu)
 
 (defcustom fancy-ffap-menu-use-header-line t
   "If non-nil, use the header line to display URLs Menu column titles."
