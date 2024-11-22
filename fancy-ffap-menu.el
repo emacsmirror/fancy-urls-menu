@@ -126,7 +126,7 @@ If ARG is positive, unmark current entry and (ARG - 1) next entries."
     (forward-line -1)
     (setq arg (1+ arg))))
 
-(defcustom fancy-ffap-menu-browser 'browse-url
+(defcustom fancy-ffap-menu-browser #'browse-url
   "Function used to open a URL."
   :type 'function
   :group 'fancy-ffap-menu)
@@ -206,7 +206,7 @@ function that returns a list of URLs."
                              (t " "))
                             url))
               entries)))
-    (setq url-width (apply 'max
+    (setq url-width (apply #'max
                            0
                            (mapcar (lambda (entry)
                                      (length (fancy-ffap-menu--entry-to-url entry)))
@@ -224,7 +224,7 @@ function that returns a list of URLs."
   "Return all URLs in current buffer.
 
 Returned list includes duplicates."
-  (mapcar 'car (ffap-menu-rescan)))
+  (mapcar #'car (ffap-menu-rescan)))
 
 (defun fancy-ffap-menu-list-urls-noselect (&optional url-list filter-predicate)
   "Create and return a Buffer Menu buffer.
