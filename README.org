@@ -4,6 +4,18 @@ The Fancy FFAP (Find File At Point!  Look it up, it's legit and not at all a che
 
 Currently only src_elisp{fancy-ffap-menu-list-urls} works.
 
+** Installation.
+
+*** Manual installation.
+
+First clone and open the package with emacs:
+
+#+begin_src sh
+  git clone https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/
+#+end_src
+
+Now, in Emacs, run the command ~package-install-from-file~ and choose the file =emacs-fancy-ffap-menu/fancy-ffap-menu.el= in the cloned repository.
+
 ** Contribute: Questions, Bug reports, Feature Requests, And Patches.
 
 If you have any questions to ask, bugs to report, or features to suggest, use [[https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/issues/new][the Codeberg issue tracker]].
