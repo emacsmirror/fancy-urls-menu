@@ -1,4 +1,4 @@
-;;; fancy-ffap-menu.el --- Interface for viewing and choosing URLs to open -*- lexical-binding: t -*-
+;;; fancy-urls-menu.el --- Interface for viewing and opening URLs in current buffer -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2024  Yuval Langer
 
@@ -6,7 +6,7 @@
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "29.1"))
 ;; Version: 0.1.0
-;; Homepage: https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/
+;; Homepage: https://codeberg.org/kakafarm/emacs-fancy-urls-menu/
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -23,80 +23,85 @@
 
 ;;; Commentary:
 
-;; The Fancy FFAP (Find File At Point!  Look it up, it's legit and not
-;; at all a cheeky joke!) Menu is used to view and choose the visible
-;; URLs one would like to open in a browser (EWW, links2, or something
-;; deficient like Firefox).  Run the `fancy-ffap-menu-list-urls'
-;; command to get the URLs of the current buffer.
+;; Run the `fum-list-urls' command to get the URLs of the current
+;; buffer.  The Fancy URLs Menu provides a way of finding URLs in the
+;; current buffer and opening them in a browser (Emacs EWW, links2, or
+;; something terrible like Firefox).  It is hopefully an improvement
+;; to the ffap-menu of the FFAP package (Find File At Point!  Look it
+;; up, it's legit and not at all a cheeky joke!) and uses the
+;; ffap-menu-rescan at its core.  It derives from
+;; `Tabulated-list-mode', so it is similar in user experience to
+;; `list-buffers', `list-processes', and `list-packages', as all three
+;; derive from `Tabulated-list-mode'.
 
 ;;; Code:
 
 (require 'ffap)
 (require 'tabulated-list)
 
-(defvar-local fancy-ffap-menu-filter-predicate nil
+(defvar-local fum-filter-predicate nil
   "Function to filter out URLs in the URL list.
 URLs that don't satisfy the predicate will be skipped.
 The value should be a function of one argument; it will be
 called with the URL.  If this function returns non-nil,
 then the URL will be displayed in the URL list.")
 
-(defvar-local fancy-ffap-menu-url-list nil
+(defvar-local fum-url-list nil
   "The current list of URLs or function to return URLs.")
 
-(defvar-keymap fancy-ffap-menu-mode-map
-  :doc "Local keymap for `fancy-ffap-menu-mode' buffers."
+(defvar-keymap fum-mode-map
+  :doc "Local keymap for `fum-mode' buffers."
   :parent tabulated-list-mode-map
-  "o" #'fancy-ffap-menu-mark
-  "a" #'fancy-ffap-menu-mark-all
-  "x" #'fancy-ffap-menu-open-marked-entries
-  "u" #'fancy-ffap-menu-unmark
-  "U" #'fancy-ffap-menu-unmark-all)
+  "o" #'fum-mark
+  "a" #'fum-mark-all
+  "x" #'fum-open-marked-entries
+  "u" #'fum-unmark
+  "U" #'fum-unmark-all)
 
-(easy-menu-define fancy-ffap-menu-mode-menu fancy-ffap-menu-mode-map
-  "Menu for `fancy-ffap-menu-mode' buffers."
-  '("fancy-ffap-menu"
-    ["Mark URL" fancy-ffap-menu-mark
-     :help "Mark URL for browsing with `fancy-ffap-menu-browser'"]
-    ["Mark all URLs" fancy-ffap-menu-mark-all
-     :help "Mark all URLs for browsing with `fancy-ffap-menu-browser'."]
+(easy-menu-define fum-mode-menu fum-mode-map
+  "Menu for `fum-mode' buffers."
+  '("fancy-urls-menu"
+    ["Mark URL" fum-mark
+     :help "Mark URL for browsing with `fum-browser'"]
+    ["Mark all URLs" fum-mark-all
+     :help "Mark all URLs for browsing with `fum-browser'."]
     "---"
-    ["Unmark" fancy-ffap-menu-unmark
+    ["Unmark" fum-unmark
      :help "Unmark a URL for browsing."]
-    ["Unmark all URLs" fancy-ffap-menu-unmark-all
+    ["Unmark all URLs" fum-unmark-all
      :help "Unmark all URLs for browsing."]
     "---"
     ["Execute" Buffer-menu-execute
-     :help "Open all marked URLs with `fancy-ffap-menu-browser'."]))
+     :help "Open all marked URLs with `fum-browser'."]))
 
-(define-derived-mode fancy-ffap-menu-mode tabulated-list-mode
+(define-derived-mode fum-mode tabulated-list-mode
   "fancy ffap menu mode")
 
-(defun fancy-ffap-menu-mark-all ()
+(defun fum-mark-all ()
   "Mark all entries for opening."
-  (interactive nil fancy-ffap-menu-mode)
+  (interactive nil fum-mode)
   (save-excursion
-    (fancy-ffap-menu-beginning)
+    (fum-beginning)
     (while (not (eobp))
       (tabulated-list-set-col 0 "o" t)
       (forward-line 1))))
 
-(defun fancy-ffap-menu-unmark-all ()
+(defun fum-unmark-all ()
   "Mark all entries for opening."
-  (interactive nil fancy-ffap-menu-mode)
+  (interactive nil fum-mode)
   (save-excursion
-    (fancy-ffap-menu-beginning)
+    (fum-beginning)
     (while (not (eobp))
       (tabulated-list-set-col 0 " " t)
       (forward-line 1))))
 
-(defun fancy-ffap-menu-mark (&optional arg)
+(defun fum-mark (&optional arg)
   "Mark entry or entries for opening.
 
 If ARG is 0 or not provided, mark current entry and advance to the next entry.
 If ARG is negative, mark current entry, and (ARG - 1) previous entries.
 If ARG is positive, mark current entry, and (ARG - 1) next entries."
-  (interactive "p" fancy-ffap-menu-mode)
+  (interactive "p" fum-mode)
   (when (or (null arg) (= arg 0))
     (setq arg 1))
   (while (< 0 arg)
@@ -108,13 +113,13 @@ If ARG is positive, mark current entry, and (ARG - 1) next entries."
     (forward-line -1)
     (setq arg (1+ arg))))
 
-(defun fancy-ffap-menu-unmark (&optional arg)
+(defun fum-unmark (&optional arg)
   "Unmark URL for opening.
 
 If ARG is 0 or not provided, unmark current entry and advance to the next entry.
 If ARG is negative, unmark current entry and (ARG - 1) previous entries.
 If ARG is positive, unmark current entry and (ARG - 1) next entries."
-  (interactive "p" fancy-ffap-menu-mode)
+  (interactive "p" fum-mode)
   (when (or (null arg) (= arg 0))
     (setq arg 1))
   (while (< 0 arg)
@@ -126,36 +131,36 @@ If ARG is positive, unmark current entry and (ARG - 1) next entries."
     (forward-line -1)
     (setq arg (1+ arg))))
 
-(defcustom fancy-ffap-menu-browser #'browse-url
+(defcustom fum-browser #'browse-url
   "Function used to open a URL."
   :type 'function
-  :group 'fancy-ffap-menu)
+  :group 'fum-menu)
 
-(defcustom fancy-ffap-menu-use-header-line t
+(defcustom fum-use-header-line t
   "If non-nil, use the header line to display URLs Menu column titles."
   :type 'boolean
-  :group 'fancy-ffap-menu)
+  :group 'fum-menu)
 
-(defun fancy-ffap-menu-beginning ()
+(defun fum-beginning ()
   "Move point to the first entry line."
   (goto-char (point-min))
-  (unless fancy-ffap-menu-use-header-line
+  (unless fum-use-header-line
     (forward-line)))
 
-(defun fancy-ffap-menu-open-marked-entries ()
-  "Open entries marked for opening with `fancy-ffap-menu-browser'."
-  (interactive nil fancy-ffap-menu-mode)
-  (dolist (url (fancy-ffap-menu-marked-urls))
-    (apply fancy-ffap-menu-browser (list url))))
+(defun fum-open-marked-entries ()
+  "Open entries marked for opening with `fum-browser'."
+  (interactive nil fum-mode)
+  (dolist (url (fum-marked-urls))
+    (apply fum-browser (list url))))
 
 ;;;###autoload
-(defun fancy-ffap-menu-list-urls ()
+(defun fum-list-urls ()
   "Display a list of current buffer's URLs.
 The list is displayed in a buffer named \"*fancy ffap URLs list*\""
   (interactive)
-  (display-buffer (fancy-ffap-menu-list-urls-noselect)))
+  (display-buffer (fum-list-urls-noselect)))
 
-(defun fancy-ffap-menu-url (&optional error-if-non-existent-p)
+(defun fum-url (&optional error-if-non-existent-p)
   "Return the URL described by the current URL Menu line.
 If there is no URL here, return nil if ERROR-IF-NON-EXISTENT-P
 is nil or omitted, and signal an error otherwise."
@@ -165,40 +170,40 @@ is nil or omitted, and signal an error otherwise."
                (error "No URL on this line")))
           (t url))))
 
-(defun fancy-ffap-menu-marked-urls (&optional unmark)
-  "Return the list of URLs marked with `fancy-ffap-menu-mark'.
+(defun fum-marked-urls (&optional unmark)
+  "Return the list of URLs marked with `fum-mark'.
 If UNMARK is non-nil, unmark them."
   (let (urls)
-    (fancy-ffap-menu-beginning)
+    (fum-beginning)
     (while (re-search-forward "^o" nil t)
-      (let ((url (fancy-ffap-menu-url)))
+      (let ((url (fum-url)))
         (when (and url unmark)
           (tabulated-list-set-col 0 " " t))
         (push url urls)))
     (nreverse urls)))
 
-(defun fancy-ffap-menu--entry-to-url (entry)
+(defun fum--entry-to-url (entry)
   "Return the URL of ENTRY."
   (pcase entry
     (`(,_entry-id [,_entry-mark ,entry-url]) entry-url)))
 
-(defun fancy-ffap-menu--refresh (&optional url-list)
+(defun fum--refresh (&optional url-list)
   "Refresh URLs table.
 
 When URL-LIST is provided, it must be either a list of URLs or a
 function that returns a list of URLs."
-  (let ((marked-urls (fancy-ffap-menu-marked-urls))
-        (filter-predicate (and (functionp fancy-ffap-menu-filter-predicate)
-                               fancy-ffap-menu-filter-predicate))
+  (let ((marked-urls (fum-marked-urls))
+        (filter-predicate (and (functionp fum-filter-predicate)
+                               fum-filter-predicate))
         entries
         url-width)
     (dolist (url (cond
                   ((functionp url-list)
                    (funcall url-list))
                   (url-list)
-                  ((functionp fancy-ffap-menu-url-list)
-                   (funcall fancy-ffap-menu-url-list))
-                  (fancy-ffap-menu-url-list)))
+                  ((functionp fum-url-list)
+                   (funcall fum-url-list))
+                  (fum-url-list)))
       (when (or (null filter-predicate)
                 (funcall filter-predicate url))
         (push (list url
@@ -210,45 +215,48 @@ function that returns a list of URLs."
     (setq url-width (apply #'max
                            0
                            (mapcar (lambda (entry)
-                                     (length (fancy-ffap-menu--entry-to-url entry)))
+                                     (length (fum--entry-to-url entry)))
                                    entries)))
     (setq tabulated-list-format
           (vector
            '("M" 1 t)
            `("URL" ,url-width t) ;; :pad-right 0
            ))
-    (setq tabulated-list-use-header-line fancy-ffap-menu-use-header-line)
+    (setq tabulated-list-use-header-line fum-use-header-line)
     (setq tabulated-list-entries (nreverse entries)))
   (tabulated-list-init-header))
 
-(defun fancy-ffap-menu--ffap-menu-rescan-urls ()
+(defun fum--ffap-menu-rescan-urls ()
   "Return all URLs in current buffer.
 
 Returned list includes duplicates."
   (mapcar #'car (ffap-menu-rescan)))
 
-(defun fancy-ffap-menu-list-urls-noselect (&optional url-list filter-predicate)
+(defun fum-list-urls-noselect (&optional url-list filter-predicate)
   "Create and return a Buffer Menu buffer.
-This is called by `fancy-ffap-menu-list-urls' and others as a subroutine.
+This is called by `fum-list-urls' and others as a subroutine.
 
 If URL-LIST is non-nil, it should be either a list of URLs or a
 function that returns a list of URLs; it means list those URLs
-and no others.  See more at `fancy-ffap-menu-url-list'.
+and no others.  See more at `fum-url-list'.
 
 If FILTER-PREDICATE is non-nil, it should be a function that
 filters out URLs from the list of URLs.  See more at
-`fancy-ffap-menu-filter-predicate'."
+`fum-filter-predicate'."
   (let ((buffer (get-buffer-create "*Fancy FFAP URLs list*"))
         (url-list (or url-list
-                      (fancy-ffap-menu--ffap-menu-rescan-urls))))
+                      (fum--ffap-menu-rescan-urls))))
     (with-current-buffer buffer
-      (fancy-ffap-menu-mode)
-      (setq fancy-ffap-menu-url-list url-list)
-      (setq fancy-ffap-menu-filter-predicate filter-predicate)
-      (fancy-ffap-menu--refresh url-list)
+      (fum-mode)
+      (setq fum-url-list url-list)
+      (setq fum-filter-predicate filter-predicate)
+      (fum--refresh url-list)
       (tabulated-list-print))
     buffer))
 
-(provide 'fancy-ffap-menu)
+(provide 'fum-menu)
 
-;;; fancy-ffap-menu.el ends here
+;; Local Variables:
+;; read-symbol-shorthands: (("fum-" . "fancy-urls-menu-"))
+;; End:
+;;; fancy-urls-menu.el ends here

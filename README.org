@@ -1,8 +1,14 @@
-* Fancy FFAP URLs Menu.
+* Fancy URLs Menu.
 
-The Fancy FFAP (Find File At Point!  Look it up, it's legit and not at all a cheeky joke!) URLs Menu is used to view and choose the URLs visible in the current buffer for opening in a browser (EWW, links2, or something horrid like Firefox).
+The Fancy URLs Menu (previously Fancy FFAP Menu) provides a way of finding URLs in the current buffer and opening them in a browser of your choosing.
 
-Currently only src_elisp{fancy-ffap-menu-list-urls} works.
+This package was written because of the limitations of the src_elisp{ffap-menu} command of the FFAP package (Find File At Point!  Get your brain out of the gutter!) and uses the src_elisp{ffap-menu-rescan} function to assemble the list of URLs in the current buffer.
+
+It also derives from src_elisp{Tabulated-list-mode}, so it is similar in user experience to src_elisp{list-buffers}, src_elisp{list-processes}, and src_elisp{list-packages}, as all three derive from src_elisp{Tabulated-list-mode}.
+
+** Usage.
+
+Currently only the src_elisp{fancy-urls-menu-list-urls} command works.
 
 ** Installation.
 
@@ -11,10 +17,10 @@ Currently only src_elisp{fancy-ffap-menu-list-urls} works.
 First clone and open the package with emacs:
 
 #+begin_src sh
-  git clone https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/
+  git clone https://codeberg.org/kakafarm/emacs-fancy-urls-menu/
 #+end_src
 
-Now, in Emacs, run the command ~package-install-from-file~ and choose the file =emacs-fancy-ffap-menu/fancy-ffap-menu.el= in the cloned repository.
+Now, in Emacs, run the command ~package-install-from-file~ and choose the file =emacs-fancy-urls-menu/fancy-urls-menu.el= in the cloned repository.
 
 ** Contribute: Questions, Bug reports, Feature Requests, And Patches.
 

@@ -1,4 +1,4 @@
-;;; fancy-ffap-menu-tests.el --- Interface for viewing and choosing URLs to open -*- lexical-binding: t -*-
+;;; fancy-urls-menu-tests.el --- Interface for viewing and choosing URLs to open -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2024  Yuval Langer
 
@@ -6,7 +6,7 @@
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "29.1"))
 ;; Version: 0.1.0
-;; Homepage: https://codeberg.org/kakafarm/emacs-fancy-ffap-menu/
+;; Homepage: https://codeberg.org/kakafarm/emacs-fancy-urls-menu/
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -24,36 +24,36 @@
 ;;; Code:
 
 (require 'ert)
-(require 'fancy-ffap-menu)
+(require 'fancy-urls-menu)
 
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-url-list-empty ()
+(ert-deftest fancy-urls-menu-list-urls-noselect-test-url-list-empty ()
   (with-temp-buffer
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect '())))
+    (let ((fancy-buffer (fancy-urls-menu-list-urls-noselect '())))
       (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
+        (fancy-urls-menu-beginning)
+        (fancy-urls-menu-mark-all)
         (should (equal '()
-                       (fancy-ffap-menu-marked-urls)))))))
+                       (fancy-urls-menu-marked-urls)))))))
 
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-url-list-only-gnu ()
+(ert-deftest fancy-urls-menu-list-urls-noselect-test-url-list-only-gnu ()
   (with-temp-buffer
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect '("https://gnu.org/"))))
+    (let ((fancy-buffer (fancy-urls-menu-list-urls-noselect '("https://gnu.org/"))))
       (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
+        (fancy-urls-menu-beginning)
+        (fancy-urls-menu-mark-all)
         (should (equal '("https://gnu.org/")
-                       (fancy-ffap-menu-marked-urls)))))))
+                       (fancy-urls-menu-marked-urls)))))))
 
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-empty ()
+(ert-deftest fancy-urls-menu-list-urls-noselect-test-empty ()
   (with-temp-buffer
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect)))
+    (let ((fancy-buffer (fancy-urls-menu-list-urls-noselect)))
       (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
+        (fancy-urls-menu-beginning)
+        (fancy-urls-menu-mark-all)
         (should (equal '()
-                       (fancy-ffap-menu-marked-urls)))))))
+                       (fancy-urls-menu-marked-urls)))))))
 
-(ert-deftest fancy-ffap-menu-list-urls-noselect-test-some-urls ()
+(ert-deftest fancy-urls-menu-list-urls-noselect-test-some-urls ()
   (with-temp-buffer
     (insert "
 ;; https://gnu.org/
@@ -62,13 +62,13 @@
 ;; https://gnu.org/
 ;; https://farside.link/
 ")
-    (let ((fancy-buffer (fancy-ffap-menu-list-urls-noselect)))
+    (let ((fancy-buffer (fancy-urls-menu-list-urls-noselect)))
       (with-current-buffer fancy-buffer
-        (fancy-ffap-menu-beginning)
-        (fancy-ffap-menu-mark-all)
+        (fancy-urls-menu-beginning)
+        (fancy-urls-menu-mark-all)
         (should (equal '("https://gnu.org/" "https://farside.link/")
-                       (fancy-ffap-menu-marked-urls)))))))
+                       (fancy-urls-menu-marked-urls)))))))
 
-(provide 'fancy-ffap-menu-tests)
+(provide 'fancy-urls-menu-tests)
 
-;;; fancy-ffap-menu-tests.el ends here
+;;; fancy-urls-menu-tests.el ends here
