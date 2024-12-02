@@ -254,7 +254,7 @@ filters out URLs from the list of URLs.  See more at
       (tabulated-list-print))
     buffer))
 
-(provide 'fum-menu)
+(provide 'fancy-urls-menu)
 
 ;; Local Variables:
 ;; read-symbol-shorthands: (("fum-" . "fancy-urls-menu-"))
