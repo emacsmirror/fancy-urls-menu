@@ -5,7 +5,7 @@
 ;; Maintainer: yuval.langer@gmail.com
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "29.1"))
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Homepage: https://codeberg.org/kakafarm/emacs-fancy-urls-menu/
 
 ;; GNU Emacs is free software: you can redistribute it and/or modify
