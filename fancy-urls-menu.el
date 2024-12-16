@@ -75,7 +75,7 @@ then the URL will be displayed in the URL list.")
      :help "Open all marked URLs with `fancy-urls-menu-browser'."]))
 
 (define-derived-mode fancy-urls-menu-mode tabulated-list-mode
-  "fancy ffap menu mode")
+  "fancy URLs menu mode")
 
 (defun fancy-urls-menu-mark-all ()
   "Mark all entries for opening."
