@@ -1,5 +1,7 @@
 * Fancy URLs Menu.
 
+[[https://melpa.org/#/fancy-urls-menu][file:https://melpa.org/packages/fancy-urls-menu-badge.svg]]
+
 The Fancy URLs Menu (previously Fancy FFAP Menu) provides a way of finding URLs in the current buffer and opening them in a browser of your choosing.
 
 This package was written because of the limitations of the src_elisp{ffap-menu} command of the FFAP package (Find File At Point!  Get your brain out of the gutter!) and uses the src_elisp{ffap-menu-rescan} function to assemble the list of URLs in the current buffer.
