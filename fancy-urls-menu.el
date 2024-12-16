@@ -49,6 +49,9 @@ then the URL will be displayed in the URL list.")
 (defvar-local fancy-urls-menu-url-list nil
   "The current list of URLs or function to return URLs.")
 
+(defvar-local fancy-urls-menu--original-buffer nil
+  "The buffer from whence we came and from which we get our URLs.")
+
 (defvar-keymap fancy-urls-menu-mode-map
   :doc "Local keymap for `fancy-urls-menu-mode' buffers."
   :parent tabulated-list-mode-map
@@ -56,11 +59,14 @@ then the URL will be displayed in the URL list.")
   "a" #'fancy-urls-menu-mark-all
   "x" #'fancy-urls-menu-open-marked-entries
   "u" #'fancy-urls-menu-unmark
-  "U" #'fancy-urls-menu-unmark-all)
+  "U" #'fancy-urls-menu-unmark-all
+  "g" #'fancy-urls-menu-update-urls)
 
 (easy-menu-define fancy-urls-menu-mode-menu fancy-urls-menu-mode-map
   "Menu for `fancy-urls-menu-mode' buffers."
   '("fancy-urls-menu"
+    ["Update URLs" fancy-urls-menu-update-urls
+     :help "Update the URLs list."]
     ["Mark URL" fancy-urls-menu-mark
      :help "Mark URL for browsing with `fancy-urls-menu-browser'"]
     ["Mark all URLs" fancy-urls-menu-mark-all
@@ -193,8 +199,8 @@ If UNMARK is non-nil, unmark them."
 When URL-LIST is provided, it must be either a list of URLs or a
 function that returns a list of URLs."
   (let ((marked-urls (fancy-urls-menu-marked-urls))
-        (filter-predicate (and (functionp fancy-urls-menu-filter-predicate)
-                               fancy-urls-menu-filter-predicate))
+        (filter-predicate (when (functionp fancy-urls-menu-filter-predicate)
+                            fancy-urls-menu-filter-predicate))
         entries
         url-width)
     (dolist (url (cond
@@ -226,6 +232,14 @@ function that returns a list of URLs."
     (setq tabulated-list-entries (nreverse entries)))
   (tabulated-list-init-header))
 
+(defun fancy-urls-menu-update-urls ()
+  "Update URLs in menu."
+  (interactive nil fancy-urls-menu-mode)
+  (let ((url-list (with-current-buffer fancy-urls-menu--original-buffer
+                    (fancy-urls-menu--ffap-menu-rescan-urls))))
+    (fancy-urls-menu--refresh url-list)
+    (revert-buffer)))
+
 (defun fancy-urls-menu--ffap-menu-rescan-urls ()
   "Return all URLs in current buffer.
 
@@ -243,16 +257,23 @@ and no others.  See more at `fancy-urls-menu-url-list'.
 If FILTER-PREDICATE is non-nil, it should be a function that
 filters out URLs from the list of URLs.  See more at
 `fancy-urls-menu-filter-predicate'."
-  (let ((buffer (get-buffer-create "*Fancy FFAP URLs list*"))
-        (url-list (or url-list
-                      (fancy-urls-menu--ffap-menu-rescan-urls))))
-    (with-current-buffer buffer
+  (let* ((source-buffer (current-buffer))
+         (source-buffer-name (buffer-name source-buffer))
+         (new-fancy-urls-list-buffer (get-buffer-create (concat "*Fancy FFAP URLs list"
+                                            (if source-buffer-name
+                                                (concat " - " source-buffer-name)
+                                              "")
+                                            "*")))
+         (url-list (or url-list
+                       (fancy-urls-menu--ffap-menu-rescan-urls))))
+    (with-current-buffer new-fancy-urls-list-buffer
       (fancy-urls-menu-mode)
-      (setq fancy-urls-menu-url-list url-list)
-      (setq fancy-urls-menu-filter-predicate filter-predicate)
+      (setq-local fancy-urls-menu--original-buffer source-buffer)
+      (setq-local fancy-urls-menu-url-list url-list)
+      (setq-local fancy-urls-menu-filter-predicate filter-predicate)
       (fancy-urls-menu--refresh url-list)
       (tabulated-list-print))
-    buffer))
+    new-fancy-urls-list-buffer))
 
 (provide 'fancy-urls-menu)
 
