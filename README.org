@@ -6,11 +6,11 @@ This package was written because of the limitations of the src_elisp{ffap-menu} 
 
 It also derives from src_elisp{Tabulated-list-mode}, so it is similar in user experience to src_elisp{list-buffers}, src_elisp{list-processes}, and src_elisp{list-packages}, as all three derive from src_elisp{Tabulated-list-mode}.
 
-** Usage.
-
-Currently only the src_elisp{fancy-urls-menu-list-urls} command works.
-
 ** Installation.
+
+*** MELPA installation.
+
+Follow [[https://melpa.org/#/getting-started][the MELPA installation guide]].
 
 *** Manual installation.
 
@@ -21,6 +21,10 @@ First clone and open the package with emacs:
 #+end_src
 
 Now, in Emacs, run the command ~package-install-from-file~ and choose the file =emacs-fancy-urls-menu/fancy-urls-menu.el= in the cloned repository.
+
+** Usage.
+
+Currently only the src_elisp{fancy-urls-menu-list-urls} command works.
 
 ** Contribute: Questions, Bug reports, Feature Requests, And Patches.
 
